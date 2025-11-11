@@ -3,36 +3,38 @@ name: Docker Build & Push to GHCR
 on:
   push:
     branches:
-      - pablo_reyes  # Solo se ejecuta cuando hay cambios en tu rama
+      - pablo_reyes
 
-# 1. CORRECCIÓN CRÍTICA: Bloque de permisos para escribir en GHCR
-# Este bloque otorga al GITHUB_TOKEN el permiso necesario para publicar el paquete.
 permissions:
-  contents: read     # Permiso para leer el código (necesario para checkout)
-  packages: write    # PERMISO CRUCIAL para publicar en GHCR
+  contents: read
+  packages: write
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
     - name: 🧾 Checkout repository
-      # Baja tu código al servidor de GitHub Actions
       uses: actions/checkout@v4
 
+    # Paso: crear la versión en minúsculas del repo (owner/repo)
+    - id: repo_lower
+      name: 🔎 Prepare lowercased repo name
+      run: |
+        # GITHUB_REPOSITORY contiene "owner/repo"
+        REPO="$GITHUB_REPOSITORY"
+        LOWER=$(echo "$REPO" | tr '[:upper:]' '[:lower:]')
+        echo "repo_lower=$LOWER" >> "$GITHUB_OUTPUT"
+
     - name: 🔐 Login to GitHub Container Registry
-      # Utiliza el token generado automáticamente por GitHub
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: 🏗️ Build and push Docker image
-      # Construye y publica la imagen
       uses: docker/build-push-action@v6
       with:
-        push: true
-        # 2. CORRECCIÓN CRÍTICA: Se reemplaza el segundo ':' por un '-' 
-        # para que la etiqueta sea válida. El formato es "registro/repositorio:etiqueta".
-        tags: ghcr.io/${{ github.repository }}:pablo-v-1.0.1 
         context: .
+        push: true
+        tags: ghcr.io/${{ steps.repo_lower.outputs.repo_lower }}:pablo-v-1.0.1
