@@ -1,7 +1,13 @@
-FROM python:x3.10-slim#
-WORKDIR /app#
-COPY requirements.txt 
-RUN pip install -r requirements.txt#
-COPY . /app#
-EXPOSE 5000#
-CMD ["python", "app.py"]
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Copia requirements.txt dentro del contenedor
+COPY requirements.txt /app/
+
+RUN pip install -r requirements.txt
+
+# Copia el resto del código al contenedor
+COPY . /app/
+
+CMD ["python", "main.py"]
