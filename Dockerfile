@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 # Copia el resto del código al contenedor
 COPY . /app/
 
-CMD ["python", "main.py"]
+CMD ["python", "app.py"]
