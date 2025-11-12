@@ -16,7 +16,7 @@ services:
         - "traefik.http.routers.pgreyes-secure.rule=Host(`pgreyes.byronrm.com`)"
         - "traefik.http.routers.pgreyes-secure.tls=true"
         - "traefik.http.routers.pgreyes-secure.tls.certresolver=http"
-        - "traefik.http.routers.pgreyes-secure.service=pgmoreno"
+        - "traefik.http.routers.pgreyes-secure.service=pgreyes"
         - "traefik.http.services.pgreyes.loadbalancer.server.port=80"
         - "traefik.docker.network=traefik-public"
     networks:

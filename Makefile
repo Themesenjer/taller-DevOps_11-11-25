@@ -1,5 +1,5 @@
 build:
-	docker build -t anitaimg:1.0.1
+	docker build -t anitaimg:1.0.1 .
 
 deploy:
 	docker stack deploy --with-registry-auth -c stack.yml doraemon
